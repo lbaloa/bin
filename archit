@@ -15,14 +15,67 @@ archit - read a list of files from stdin and archives it according to rules file
 	"""
 	print(s)
 
-def main(argv):
+def ReadStandardInput():
+	standardInputContent = sys.stdin.read()
+	return standardInputContent
+
+def GetStandardInputData(content):
+	# 1) We create a list of filenames passed through the standard input
+	filename_list = []
+
+	for filename in content:
+		filename_list.append(filename.rstrip()) 
+    
+	# 2) Read all alias and rules and put it in a list
+
+	with open(archive_file) as rulesfile:
+	    data = json.load(rulesfile)
+	    aliases = data['alias']
+	    aliases_cmd = data['alias_cmd']
+	    rules = data['rules']
+
+	return aliases, aliases_cmd, rules
+
+def GetFinalRules(alias, alias_cmd, rules):
+	new_rules = rules
+	# 1) Replace alias in rules
+	for alias_key in alias:
+		for rule_key in rules:
+			replacement = alias[alias_key]
+        		original_rule = new_rules[rule_key]
+			
+			new_rules[rule_key] = re.sub(alias_key,replacement,original_rule)
+
+	# 2) Replace final directories with
+	for alias_cmd_key in alias_cmd:
+		for rule_key in new_rules:
+			command = "replacement=str(" + alias_cmd[alias_cmd_key] +')'
+			command = command.rstrip()
+			
+			exec(command)
+			
+			original_rule = new_rules[rule_key]
+			new_rules[rule_key] = re.sub(alias_cmd_key,replacement,original_rule)
 	
+	return new_rules
+
+def archit():
+	print("archit started")
+	
+	input = ReadStandardInput()
+	
+	alias, alias_cmd, rules = GetStandardInputData(input)
+
+	rules = GetFinalRules(alias, alias_cmd, rules)
+
+	print(rules)
+
+def main(argv):
 	try:
 		opts, args = getopt.getopt(argv,"h")
-	
 	except getopt.GetoptError:
 		print("Option %s was not expected" %  argv)
-		sys.exit(2)
+		sys.exit(1)
 
 	for opt,arg in opts:
 		if opt =='-h':
@@ -30,8 +83,9 @@ def main(argv):
 			sys.exit()
 		else:
 			print('Option %s is not expect' % opts)
+			sys.exit(1)
 	
-	print("Ready to start command")
+	archit()
 #	print_help()
 #	sys.exit()
 
@@ -39,56 +93,9 @@ if __name__ == "__main__":
 	
 	main(sys.argv[1:])
 
-	
-#		for opt, arg in opts:
-#			if opt == '-h':
-#				print 'test.py -i <inputfile> -o <outputfile>'
-#				sys.exit()
-#			elif opt in ("-i", "--ifile"):
-#				inputfile = arg
-#			elif opt in ("-o", "--ofile"):
-
-# 1) We create a list of filenames passed through the standard input
-
-#filename_list = []
-
-#for filename in sys.stdin:
-#    filename_list.append(filename.rstrip()) 
-    
-# 2) Read all alias and rules and put it in a list
-
-#with open(archive_file) as rulesfile:
-#    data = json.load(rulesfile)
-#    aliases = data['alias']
-#    aliases_cmd = data['alias_cmd']
-#    rules = data['rules']
 
 #print(rules)
 #print("")
-
-# 3) Replace alias in rules
-
-#for alias_key in aliases:
-#    for rule_key in rules:
-
-#        replacement = aliases[alias_key]
-#        original_rule = rules[rule_key]
-
-#        rules[rule_key] = re.sub(alias_key,replacement,original_rule)
-
-# 4) Replace final directories with
-
-#for alias_cmd_key in aliases_cmd:
-#    for rule_key in rules:
-
-#        command = "replacement=str(" + aliases_cmd[alias_cmd_key] +')'
-#        command = command.rstrip()
-#        exec(command)
-#        print("replacement is %s" % replacement)
-#        original_rule = rules[rule_key]
-
-#        rules[rule_key] = re.sub(alias_cmd_key,replacement,original_rule)
-
 
 # 3) Print alias and rules
 
