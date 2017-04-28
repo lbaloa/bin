@@ -1,0 +1,97 @@
+#!/usr/bin/python
+import getopt, sys
+import json
+import re
+import time
+
+archive_file=".archit.rules"
+
+def print_help():
+	
+	s="""\
+
+archit - read a list of files from stdin and archives it according to rules file (.archit.rules)
+	\
+	"""
+	print(s)
+
+def main(argv):
+	
+	try:
+		opts, args = getopt.getopt(argv,"h")
+	
+	except getopt.GetoptError:
+		print("Option %s was not expected" %  argv)
+		sys.exit(2)
+
+	for opt,arg in opts:
+		if opt =='-h':
+			print_help()
+			sys.exit()
+		else:
+			print('Option %s is not expect' % opts)
+	
+	print("Ready to start command")
+#	print_help()
+#	sys.exit()
+
+if __name__ == "__main__":
+	
+	main(sys.argv[1:])
+
+	
+#		for opt, arg in opts:
+#			if opt == '-h':
+#				print 'test.py -i <inputfile> -o <outputfile>'
+#				sys.exit()
+#			elif opt in ("-i", "--ifile"):
+#				inputfile = arg
+#			elif opt in ("-o", "--ofile"):
+
+# 1) We create a list of filenames passed through the standard input
+
+#filename_list = []
+
+#for filename in sys.stdin:
+#    filename_list.append(filename.rstrip()) 
+    
+# 2) Read all alias and rules and put it in a list
+
+#with open(archive_file) as rulesfile:
+#    data = json.load(rulesfile)
+#    aliases = data['alias']
+#    aliases_cmd = data['alias_cmd']
+#    rules = data['rules']
+
+#print(rules)
+#print("")
+
+# 3) Replace alias in rules
+
+#for alias_key in aliases:
+#    for rule_key in rules:
+
+#        replacement = aliases[alias_key]
+#        original_rule = rules[rule_key]
+
+#        rules[rule_key] = re.sub(alias_key,replacement,original_rule)
+
+# 4) Replace final directories with
+
+#for alias_cmd_key in aliases_cmd:
+#    for rule_key in rules:
+
+#        command = "replacement=str(" + aliases_cmd[alias_cmd_key] +')'
+#        command = command.rstrip()
+#        exec(command)
+#        print("replacement is %s" % replacement)
+#        original_rule = rules[rule_key]
+
+#        rules[rule_key] = re.sub(alias_cmd_key,replacement,original_rule)
+
+
+# 3) Print alias and rules
+
+#print(aliases)
+#print("")
+#print(rules)

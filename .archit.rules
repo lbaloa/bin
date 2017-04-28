@@ -1,0 +1,9 @@
+{
+  "alias":{"root":"/",
+           "home":"/home/lb125w"},
+
+  "alias_cmd":{"yyyy":"time.localtime(time.time()).tm_year"},
+
+  "rules":{".*pdf":"home/mypdfs",
+           ".*txtt":"home/txt/yyyy"}
+}
